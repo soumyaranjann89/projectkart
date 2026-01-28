@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ProjectKart – Electronics & IoT Projects</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- AOS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+  body { font-family: 'Poppins', sans-serif; }
+</style>
+</head>
+
+
+<!-- ================= ROCKET BUTTON ================= -->
+<button
+  id="rocketBtn"
+  class="fixed right-6 z-50 hidden w-14 h-14 rounded-full
+         bg-gradient-to-br from-cyan-500 to-teal-500
+         shadow-2xl flex items-center justify-center
+         transition hover:scale-110"
+  style="top:70vh;"
+>
+
+  <!-- ===== ROCKET SVG ===== -->
+  <svg width="26" height="26" viewBox="0 0 512 512" fill="none">
+    <!-- Body -->
+    <path d="M256 16C176 96 176 256 256 480C336 256 336 96 256 16Z" fill="white"/>
+    <!-- Window -->
+    <circle cx="256" cy="200" r="26" fill="#0EA5E9"/>
+    <!-- Left fin -->
+    <path d="M176 304L128 352L176 368V304Z" fill="white"/>
+    <!-- Right fin -->
+    <path d="M336 304L384 352L336 368V304Z" fill="white"/>
+    <!-- Flame -->
+    <path d="M256 480C232 448 240 416 256 400C272 416 280 448 256 480Z"
+          fill="#F97316" class="rocket-flame"/>
+  </svg>
+</button>
+
+<!-- Smoke Container -->
+<svg id="smokeContainer" class="pointer-events-none fixed inset-0 z-40"></svg>
+
+<!-- ================= STYLES ================= -->
+<style>
+/* Floating rocket */
+#rocketBtn {
+  animation: float 2.5s ease-in-out infinite;
+}
+@keyframes float {0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+
+/* Flame flicker */
+.rocket-flame {
+  transform-origin: center;
+  animation: flame 0.25s infinite alternate;
+}
+@keyframes flame { from {transform:scaleY(1);} to {transform:scaleY(1.25);} }
+
+/* Boost straight up */
+.boost { animation: boostUp 0.9s ease-out forwards !important; }
+@keyframes boostUp { to { transform: translateY(-120vh); opacity:0; } }
+
+/* Smoke SVG circles */
+.smoke-circle {
+  fill: rgba(200,200,200,0.5);
+  filter: blur(4px);
+  animation: smokeRise 1s ease-out forwards;
+}
+
+@keyframes smokeRise {
+  to { transform: translateY(-40px) scale(2); opacity:0; }
+}
+
+/* Confetti */
+.confetti { position: fixed; top:0; font-size:16px; animation: confettiFall 1.2s ease-out forwards; }
+@keyframes confettiFall { to { transform: translateY(100vh) rotate(720deg); opacity:0; } }
+</style>
+
+
+<body class="bg-white text-gray-800 scroll-smooth">
+
+<!-- ================= HEADER ================= -->
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b shadow-sm">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <img src="./public/images/logo.png" alt="ProjectKart Logo" class="h-12 md:h-16">
+      <h2 class="text-2xl md:text-4xl font-bold text-cyan-600">
+        ProjectKart
+      </h2>
+    </div>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex gap-8 font-semibold text-xl">
+      <a href="#about" class="hover:text-cyan-600">About</a>
+      <a href="#projects" class="hover:text-cyan-600">Projects</a>
+      <a href="#services" class="hover:text-cyan-600">Services</a>
+      <a href="#enquiry" class="hover:text-cyan-600">Enquiry</a>
+      <a href="#contact" class="hover:text-cyan-600">Contact</a>
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <button onclick="toggleMenu()" class="md:hidden text-2xl">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t px-6 py-4 space-y-4 font-semibold">
+    <a href="#about" onclick="toggleMenu()">About</a> <br>
+    <a href="#projects" onclick="toggleMenu()">Projects</a><br>
+    <a href="#services" onclick="toggleMenu()">Services</a><br>
+    <a href="#enquiry" onclick="toggleMenu()">Enquiry</a><br>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="bg-gradient-to-br from-cyan-50 to-white">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center py-20 px-6">
+
+    <div data-aos="fade-right">
+      <h1 class="text-6xl md:text-5xl font-bold mb-6">
+        Innovative <span class="text-cyan-600">Electronics & IoT</span> Projects
+      </h1>
+      <p class="text-gray-600 text-base md:text-lg mb-8">
+        Custom project kits, robotics, embedded systems & expert guidance for students and innovators.
+      </p>
+      <button onclick="document.getElementById('projects').scrollIntoView()"
+        class="px-8 py-3 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-600 shadow-lg transition">
+        Explore Projects →
+      </button>
+    </div>
+
+    <div data-aos="fade-left">
+      <img src="./public/images/heroimg.png"
+        class="rounded-3xl shadow-2xl w-full object-cover">
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about" class="max-w-5xl mx-auto py-20 px-6 text-center">
+  <h2 class="text-6xl font-bold text-cyan-600 mb-6" data-aos="fade-down">
+    About ProjectKart
+  </h2>
+  <p class="text-gray-600 leading-relaxed" data-aos="fade-up">
+    ProjectKart helps students, creators, hobbyists, and engineers build electronics projects with easy kits and expert support in robotics, embedded systems, and IoT, making learning practical, simple, and fun.
+
+  </p>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects" class="py-24 bg-gray-50 px-6">
+  <h2 class="text-6xl font-bold text-center text-cyan-600 mb-14">
+    Our Project Portfolio
+  </h2>
+
+  <div class="max-w-6xl mx-auto grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+    <!-- Card -->
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-xl transition overflow-hidden">
+      <img src="./public/images/IoT.png"
+        class="h-40 w-full object-cover">
+      <div class="p-6">
+        <h2 class="font-semibold text-cyan-600 mb-2">IoT Projects</h2>
+        <p class="text-xl text-gray-600">ESP32-based automation with cloud & mobile control.</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-xl transition overflow-hidden">
+      <img src="./public/images/Drone.png"
+        class="h-40 w-full object-cover">
+      <div class="p-6">
+        <h2 class="font-semibold text-cyan-600 mb-2">Drone Technology</h2>
+        <p class="text-xl text-gray-600">Autonomous drones for monitoring & research.</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-xl transition overflow-hidden">
+      <img src="./public/images/robotics.png"
+        class="h-40 w-full object-cover">
+      <div class="p-6">
+        <h2 class="font-semibold text-cyan-600 mb-2">Robotics</h2>
+        <p class="text-xl text-gray-600">Line follower, obstacle & fire robots.</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-xl transition overflow-hidden">
+      <img src="./public/images/capstoneproject.png"
+        class="h-40 w-full object-cover">
+      <div class="p-6">
+        <h2 class="font-semibold text-cyan-600 mb-2">Capstone Projects</h2>
+        <p class="text-xl text-gray-600">Final-year embedded & AI-based projects.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- ================= SERVICES ================= -->
+<section id="services" class="py-24 bg-gray-50 px-6">
+  <h2 class="text-6xl font-bold text-center text-cyan-600 mb-14">
+    Our Services
+  </h2>
+
+  <div class="max-w-6xl mx-auto grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+    <!-- R&D Team -->
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-2xl transition overflow-hidden">
+      <img src="./public/images/R&D.png" class="h-40 w-full object-cover" alt="R&D Team">
+      <div class="p-6">
+        <h3 class="text-2xl font-semibold text-cyan-600 mb-2">R&amp;D Team</h3>
+        <p class="text-gray-600 text-lg">
+          Product research, prototyping, testing, and innovation support for startups and industries.
+        </p>
+      </div>
+    </div>
+
+    <!-- 3D Printing -->
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-2xl transition overflow-hidden">
+      <img src="./public/images/3D.png" class="h-40 w-full object-cover" alt="3D Printing">
+      <div class="p-6">
+        <h3 class="text-2xl font-semibold text-cyan-600 mb-2">3D Printing</h3>
+        <p class="text-gray-600 text-lg">
+          High-quality rapid prototyping and custom 3D printed components for projects.
+        </p>
+      </div>
+    </div>
+
+    <!-- School / College Projects -->
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-2xl transition overflow-hidden">
+      <img src="./public/images/school.png" class="h-40 w-full object-cover" alt="School and College Projects">
+      <div class="p-6">
+        <h3 class="text-2xl font-semibold text-cyan-600 mb-2">School / College Projects</h3>
+        <p class="text-gray-600 text-lg">
+          Mini, major, and capstone projects with full guidance, reports, and demos.
+        </p>
+      </div>
+    </div>
+
+    <!-- IoT Services -->
+    <div class="bg-white rounded-3xl shadow hover:-translate-y-2 hover:shadow-2xl transition overflow-hidden">
+      <img src="./public/images/component.png" class="h-40 w-full object-cover" alt="IoT Services">
+      <div class="p-6">
+        <h3 class="text-2xl font-semibold text-cyan-600 mb-2">Component Supply</h3>
+        <p class="text-gray-600 text-lg">
+          supply all types of PCB components including resistors, capacitors, ICs, diodes, transistors, connectors, LEDs, sensors, switches, and more
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================= ENQUIRY ================= -->
+<!-- ================= ENQUIRY SECTION ================= -->
+<section id="enquiry" class="py-20 px-6">
+  <h2 class="text-5xl font-bold text-center text-cyan-400 mb-6" data-aos="fade-down">
+     Quick Enquiry
+  </h2>
+
+
+  <form
+    action="https://formsubmit.co/projectkart2@gmail.com"
+    method="POST"
+    data-aos="zoom-in"
+    class="max-w-xl mx-auto bg-white p-8 rounded-3xl shadow-lg space-y-5"
+  >
+
+    <!-- Anti-spam & config -->
+    <input type="hidden" name="_honeypot" value="">
+    <input type="hidden" name="_subject" value="New ProjectKart Website Enquiry">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+
+    <div>
+      <label class="block mb-1 text-gray-300">Name</label>
+      <input
+        type="text"
+        name="Name"
+        placeholder="Your Name"
+        required
+        class="w-full p-3 rounded-xl bg-gray-200 border  focus:ring-2 focus:ring-cyan-400 outline-none"
+      >
+    </div>
+
+    <div>
+      <label class="block mb-1 text-gray-300">Email / Phone</label>
+      <input
+        type="text"
+        name="Contact"
+        placeholder="Your Email or Phone"
+        required
+        class="w-full p-3 rounded-xl bg-gray-200 border  focus:ring-2 focus:ring-cyan-400 outline-none"
+      >
+    </div>
+
+    <div>
+      <label class="block mb-1 text-gray-300">Project Details</label>
+      <textarea
+        name="Project_Details"
+        rows="4"
+        placeholder="Describe your project or question..."
+        required
+        class="w-full p-3 rounded-xl  bg-gray-200 border  focus:ring-2 focus:ring-cyan-400 outline-none"
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full py-3 rounded-xl bg-cyan-400 text-gray-900 font-semibold text-lg hover:bg-cyan-500 transition"
+    >
+      Send Enquiry <i class="fas fa-share-square ml-1"></i>
+    </button>
+  </form>
+</section>
+
+
+<!-- ===== PARALLAX WAVES ===== -->
+<div class="relative w-full h-[190px] overflow-hidden ">
+
+  <svg class="absolute bottom-0 left-0 w-[200%] h-full wave wave-slow"
+       viewBox="0 0 1200 120" preserveAspectRatio="none">
+    <path d="M0,30 C150,80 350,0 600,40 850,80 1050,20 1200,40 V120 H0 Z"
+          class="fill-cyan-200"/>
+  </svg>
+
+  <svg class="absolute bottom-0 left-0 w-[200%] h-full wave wave-mid"
+       viewBox="0 0 1200 120" preserveAspectRatio="none">
+    <path d="M0,40 C200,90 400,10 600,50 800,90 1000,30 1200,50 V120 H0 Z"
+          class="fill-cyan-300/70"/>
+  </svg>
+
+  <svg class="absolute bottom-0 left-0 w-[200%] h-full wave wave-fast"
+       viewBox="0 0 1200 120" preserveAspectRatio="none">
+    <path d="M0,50 C180,100 420,20 600,60 780,100 1020,40 1200,60 V120 H0 Z"
+          class="fill-teal-100/60"/>
+  </svg>
+
+  <svg class="absolute bottom-0 left-0 w-[200%] h-full wave wave-xfast"
+       viewBox="0 0 1200 120" preserveAspectRatio="none">
+    <path d="M0,60 C160,110 440,30 600,70 760,110 1040,50 1200,70 V120 H0 Z"
+          class="fill-white"/>
+  </svg>
+
+</div>
+
+<style>
+.wave { animation: waveMove linear infinite; }
+.wave-slow  { animation-duration: 28s; }
+.wave-mid   { animation-duration: 20s; }
+.wave-fast  { animation-duration: 14s; }
+.wave-xfast { animation-duration: 9s; }
+
+@keyframes waveMove {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+</style>
+
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="relative overflow-hidden bg-gradient-to-br from-cyan-600 via-white to-teal-300 text-gray-700">
+
+  <!-- Floating Glow Orbs -->
+  <div class="absolute -top-32 -left-32 w-96 h-96 bg-cyan-300/30 rounded-full blur-3xl animate-pulse"></div>
+  <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-300/30 rounded-full blur-3xl animate-pulse"></div>
+
+  <!-- Main Content -->
+  <div class="relative max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-3 gap-16">
+
+    <!-- BRAND -->
+    <div class="space-y-6">
+      <div class="flex items-center gap-4">
+        <img src="./public/images/logo.png" class="w-20 drop-shadow-xl" alt="ProjectKart Logo">
+        <h2 class="text-4xl font-extrabold bg-gradient-to-r from-cyan-600 to-teal-500 bg-clip-text text-transparent">
+          ProjectKart
+        </h2>
+      </div>
+
+      <p class="text-sm text-gray-600 leading-relaxed max-w-sm">
+        Electronics, IoT & software projects crafted for students and professionals.
+        We transform ideas into powerful real-world solutions 🚀
+      </p>
+
+      <!-- Social Media -->
+      <div class="flex gap-4 pt-2">
+        <a class="group w-11 h-11 flex items-center justify-center rounded-full bg-white/70 backdrop-blur shadow-lg hover:bg-cyan-600 transition">
+          <i class="fab fa-instagram text-gray-700 group-hover:text-white"></i>
+        </a>
+        <a class="group w-11 h-11 flex items-center justify-center rounded-full bg-white/70 backdrop-blur shadow-lg hover:bg-blue-600 transition">
+          <i class="fab fa-linkedin-in text-gray-700 group-hover:text-white"></i>
+        </a>
+        <a class="group w-11 h-11 flex items-center justify-center rounded-full bg-white/70 backdrop-blur shadow-lg hover:bg-gray-900 transition">
+          <i class="fab fa-github text-gray-700 group-hover:text-white"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="space-y-6">
+      <h3 class="text-3xl font-bold text-cyan-600">Get in Touch</h3>
+
+      <div class="space-y-4 text-sm">
+        <p class="flex items-center gap-4">
+          <span class="text-xl">📞</span>
+          <a href="tel:9556222983" class="hover:text-cyan-600 transition">9556222983</a>
+        </p>
+
+        <p class="flex items-center gap-4">
+          <span class="text-xl">📧</span>
+          <a href="mailto:projectkart2@gmail.com" class="hover:text-cyan-600 transition">
+            projectkart2@gmail.com
+          </a>
+        </p>
+
+        <p class="flex items-center gap-4">
+          <span class="text-xl">📍</span>
+           Pubasasan, Uttara, Bhubaneswar, Odisha 751002
+        </p>
+      </div>
+
+      <!-- WhatsApp CTA -->
+      <a
+        href="https://wa.me/919556222983"
+        target="_blank"
+        class="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 hover:scale-105 text-white px-7 py-3 rounded-full shadow-xl transition"
+      >
+        <i class="fab fa-whatsapp text-xl"></i>
+        <span class="text-sm font-semibold">Chat on WhatsApp</span>
+      </a>
+    </div>
+
+    <!-- MAP -->
+    <div class="space-y-4">
+      <h3 class="text-3xl font-bold text-cyan-600">Our Location</h3>
+
+      <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-white/50">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3744.507717599596!2d85.85232237573676!3d20.196212515851187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a19a1765c2a284f%3A0xad69171262f6edfc!2sprojectkart!5e0!3m2!1sen!2sin!4v1763640888879!5m2!1sen!2sin"
+          class="w-full h-[260px] grayscale hover:grayscale-0 transition duration-700"
+          loading="lazy"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Strip -->
+  <div class="relative border-t border-cyan-200 bg-white/70 backdrop-blur py-5 text-center text-xs text-gray-500">
+    © 2025 <span class="font-semibold text-cyan-600">ProjectKart</span> · Designed for innovators ⚡
+  </div>
+
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 800, once: true });
+
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+</script>
+
+
+<!-- ================= SCRIPT ================= -->
+<script>
+const rocket = document.getElementById("rocketBtn");
+const smokeBox = document.getElementById("smokeContainer");
+
+/* Show + Follow Scroll */
+window.addEventListener("scroll", () => {
+  const scrollY = window.scrollY;
+  const docH = document.body.scrollHeight - innerHeight;
+
+  rocket.classList.toggle("hidden", scrollY < 300);
+
+  const min = innerHeight * 0.2;
+  const max = innerHeight * 0.7;
+  rocket.style.top = max - (scrollY / docH) * (max - min) + "px";
+});
+
+/* Launch with smoke & confetti */
+rocket.addEventListener("click", () => {
+  rocket.classList.add("boost");
+  createSmoke();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  setTimeout(() => {
+    rocket.classList.remove("boost");
+    confettiBurst();
+  }, 900);
+});
+
+/* Blurred SVG Smoke Creation */
+function createSmoke() {
+  const rect = rocket.getBoundingClientRect();
+
+  for (let i = 0; i < 12; i++) {
+    const smoke = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    smoke.setAttribute("cx", 10 + Math.random()*6);
+    smoke.setAttribute("cy", 10 + Math.random()*6);
+    smoke.setAttribute("r", 6 + Math.random()*4);
+    smoke.classList.add("smoke-circle");
+
+    smoke.style.transform = `translate(${rect.left + 10}px, ${rect.top + 38}px)`;
+    smokeBox.appendChild(smoke);
+
+    // Remove after animation
+    setTimeout(() => smoke.remove(), 1000);
+  }
+}
+
+/* Confetti */
+function confettiBurst() {
+  const items = ["🎉","✨","🎊","💥"];
+  for (let i=0;i<30;i++){
+    const c = document.createElement("div");
+    c.className="confetti";
+    c.textContent = items[Math.floor(Math.random()*items.length)];
+    c.style.left = Math.random()*innerWidth + "px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1200);
+  }
+}
+</script>
+
+
+
+
+</body>
+</html>
